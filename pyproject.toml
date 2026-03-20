@@ -1,7 +1,7 @@
 [project]
-name = "python-template"
-version = "0.0.0"
-description = "A basic GitHub repository template for Python projects"
+name = "zendriver-example"
+version = "0.1.0"
+description = "Example demonstrating passive web scraping with Zendriver using Chrome DevTools Protocol"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

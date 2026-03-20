@@ -48,17 +48,6 @@ wheels = [
 ]
 
 [[package]]
-name = "python-template"
-version = "0.0.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "zendriver" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "zendriver", specifier = ">=0.15.3" }]
-
-[[package]]
 name = "websockets"
 version = "16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -132,3 +121,14 @@ sdist = { url = "https://files.pythonhosted.org/packages/bf/c1/3b453f2ca593bff73
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a5/05/138c171511f99c14a9f36a4ca132cf0e76c28308bf48a7d3d611dd9938be/zendriver-0.15.3-py3-none-any.whl", hash = "sha256:509526d16993d5f9486593720ed58c34027bd49d0f915444515aa45dd8a80741", size = 355949, upload-time = "2026-03-12T03:40:24.819Z" },
 ]
+
+[[package]]
+name = "zendriver-example"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "zendriver" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "zendriver", specifier = ">=0.15.3" }]
