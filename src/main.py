@@ -35,7 +35,7 @@ async def handler(event: object, tab: zd.Tab) -> None:
 
 async def parse_html(tab: zd.Tab) -> None:
     """Parse HTML content from a webpage."""
-    tag = await tab.query_selector(".title")
+    tag = await tab.select(".title", timeout=10)
 
     print("─ Scraped HTML ───────────────────────────────────")
     print(tag.text.strip())
