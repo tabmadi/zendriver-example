@@ -5,6 +5,7 @@ description = "Example demonstrating passive web scraping with Zendriver using C
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "cachetools>=7.0.5",
     "zendriver>=0.15.3",
 ]
 

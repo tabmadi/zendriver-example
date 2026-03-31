@@ -4,29 +4,30 @@ import asyncio
 from pathlib import Path
 
 import zendriver as zd
+from cachetools import TTLCache
 from zendriver import cdp
 
+pending_request_ids = TTLCache(maxsize=1024, ttl=30)
 
-async def handler(event: object, tab: zd.Tab) -> None:
-    """Handle CDP events and manage pending requests."""
-    if not isinstance(event, cdp.network.RequestWillBeSent):
-        return
 
+async def on_request(event: cdp.network.RequestWillBeSent, _tab: zd.Tab) -> None:
+    """Track JSON XHR requests by request ID."""
     headers = event.request.headers
 
-    if "accept" not in headers:
+    if headers.get("accept") != "application/json":
         return
 
-    if headers["accept"] != "application/json":
+    pending_request_ids[event.request_id] = True
+
+
+async def on_loading_finished(event: cdp.network.LoadingFinished, tab: zd.Tab) -> None:
+    """Fetch response body once fully loaded."""
+    if event.request_id not in pending_request_ids:
         return
 
-    await asyncio.sleep(2)
+    pending_request_ids.pop(event.request_id, None)
 
-    body, _ = await tab.send(
-        cdp.network.get_response_body(
-            request_id=event.request_id
-        )
-    )
+    body, _ = await tab.send(cdp.network.get_response_body(request_id=event.request_id))
 
     print("─ Scraped XHR request ────────────────────────────")
     print(body)
@@ -52,7 +53,8 @@ async def start() -> None:
     tab = await browser.get("about:blank")
 
     await tab.send(cdp.network.enable())
-    tab.add_handler(cdp.network.RequestWillBeSent, handler)
+    tab.add_handler(cdp.network.RequestWillBeSent, on_request)
+    tab.add_handler(cdp.network.LoadingFinished, on_loading_finished)
 
     tab = await browser.get("https://httpbin.org/")
 
